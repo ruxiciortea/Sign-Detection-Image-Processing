@@ -9,15 +9,12 @@
 using namespace std;
 using namespace cv;
 
-typedef struct neighborhoodStructure{
+typedef struct NeighborhoodStructure {
     int size;
     int* di;
     int* dj;
-};
+} NeighborhoodStructure;
 
-neighborhoodStructure n8 = {8,
-                            (int[]){0,-1,-1,-1,0,1,1,1},
-                            (int[]){1,1,0,-1,-1,-1,0,1}
-};
+extern NeighborhoodStructure n8;
 
 bool IsInside(Mat img, int i, int j);

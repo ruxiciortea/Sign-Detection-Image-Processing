@@ -17,6 +17,6 @@ enum Color {
 typedef struct ColorRange {
     Scalar lowerBound;
     Scalar upperBound;
-};
+} ColorRange;
 
 Mat findColoredPixels(Mat source, Color color);

@@ -9,6 +9,6 @@
 using namespace std;
 using namespace cv;
 
-Mat erosion(Mat source, neighborhoodStructure neighborhood, int noIterations);
-Mat dilation(Mat source, neighborhoodStructure neighborhood, int noIterations);
-Mat opening(Mat source, neighborhoodStructure neighborhood, int noIterations);
+Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations);
+Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations);
+Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations);

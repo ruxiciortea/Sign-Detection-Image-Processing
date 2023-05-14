@@ -4,7 +4,7 @@
 
 #include "MorphologicalOperations.h"
 
-Mat erosion(Mat source, neighborhoodStructure neighborhood, int noIterations) {
+Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
 
     int rows = source.rows, cols = source.cols;
     Mat dst(rows, cols, CV_8UC1, Scalar(0)), aux = source;
@@ -41,7 +41,7 @@ Mat erosion(Mat source, neighborhoodStructure neighborhood, int noIterations) {
     return dst;
 }
 
-Mat dilation(Mat source, neighborhoodStructure neighborhood, int noIterations) {
+Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
 
     int rows = source.rows, cols = source.cols;
     Mat dst(rows, cols, CV_8UC1, Scalar(0)), aux = source;
@@ -75,7 +75,7 @@ Mat dilation(Mat source, neighborhoodStructure neighborhood, int noIterations) {
 
 }
 
-Mat opening(Mat source, neighborhoodStructure neighborhood, int noIterations) {
+Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
 
     Mat dst = source;
 
