@@ -2,9 +2,6 @@
 // Created by Ruxandra Ciortea on 02.05.2023.
 //
 
-#ifndef IP_COLORTHRESHOLDING_H
-#define IP_COLORTHRESHOLDING_H
-
 #include <stdio.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -12,13 +9,14 @@
 using namespace std;
 using namespace cv;
 
-struct HSV {
-    char H;
-    char S;
-    char v;
+enum Color {
+    RED,
+    BLUE
 };
 
-Mat findRedPixels(Mat source);
-Mat findBluePixels(Mat source);
+typedef struct ColorRange {
+    Scalar lowerBound;
+    Scalar upperBound;
+};
 
-#endif //IP_COLORTHRESHOLDING_H
+Mat findColoredPixels(Mat source, Color color);
