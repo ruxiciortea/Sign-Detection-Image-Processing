@@ -5,9 +5,8 @@
 #include "MorphologicalOperations.h"
 
 Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
-
     int rows = source.rows, cols = source.cols;
-    Mat dst(rows, cols, CV_8UC1, Scalar(0)), aux = source;
+    Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL)), aux = source;
 
     for (int m = 0; m < noIterations; m++) {
         for (int i = 0; i < rows; i++) {
@@ -20,7 +19,7 @@ Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
                         int newJ = j + neighborhood.dj[l];
 
                         if (IsInside(aux, newI, newJ)) {
-                            if (aux.at<uchar>(newI, newJ) == 255) {
+                            if (aux.at<uchar>(newI, newJ) == WHITE_PIXEL) {
                                 background = true;
 
                                 break;
@@ -31,7 +30,7 @@ Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
                     }
                 }
 
-                dst.at<uchar>(i, j) = background ? 255 : 0;
+                dst.at<uchar>(i, j) = background ? WHITE_PIXEL : BLACK_PIXEL;
             }
         }
 
@@ -42,17 +41,16 @@ Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
 }
 
 Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
-
     int rows = source.rows, cols = source.cols;
-    Mat dst(rows, cols, CV_8UC1, Scalar(0)), aux = source;
+    Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL)), aux = source;
 
     for (int m = 0; m < noIterations; m++) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (aux.at<uchar>(i, j) == 255) {
-                    dst.at<uchar>(i, j) = 255;
+                if (aux.at<uchar>(i, j) == WHITE_PIXEL) {
+                    dst.at<uchar>(i, j) = WHITE_PIXEL;
                 } else {
-                    dst.at<uchar>(i, j) = 0;
+                    dst.at<uchar>(i, j) = BLACK_PIXEL;
 
                     for (int k = 0; k < neighborhood.size; k++) {
                         for (int l = 0; l < neighborhood.size; l++) {
@@ -60,7 +58,7 @@ Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
                             int newJ = j + neighborhood.dj[l];
 
                             if (IsInside(aux, newI, newJ)) {
-                                dst.at<uchar>(newI, newJ) = 0;
+                                dst.at<uchar>(newI, newJ) = BLACK_PIXEL;
                             }
                         }
                     }
@@ -72,11 +70,9 @@ Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
     }
 
     return dst;
-
 }
 
 Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
-
     Mat dst = source;
 
     for (int i = 0; i < noIterations; i++) {
@@ -84,5 +80,22 @@ Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
     }
 
     return dst;
+}
 
+Mat boundaryExtraction(Mat source, NeighborhoodStructure neighborhood) {
+    int rows = source.rows, cols = source.cols;
+    Mat erosionMat = erosion(source, neighborhood, 1);
+    Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL));
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (source.at<uchar>(i, j) == erosionMat.at<uchar>(i, j)) {
+                dst.at<uchar>(i, j) = BLACK_PIXEL;
+            } else {
+                dst.at<uchar>(i, j) = WHITE_PIXEL;
+            }
+        }
+    }
+
+    return dst;
 }

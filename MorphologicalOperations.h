@@ -12,3 +12,4 @@ using namespace cv;
 Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations);
 Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations);
 Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations);
+Mat boundaryExtraction(Mat source, NeighborhoodStructure neighborhood);
