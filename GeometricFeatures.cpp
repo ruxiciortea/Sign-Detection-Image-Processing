@@ -18,14 +18,11 @@ Perimeter naivePerimeter(Mat binaryObject, NeighborhoodStructure neighbor) {
                 bool found = false;
 
                 for (int k = 0; k < neighbor.size; k++) {
-                    for (int l = 0; l < neighbor.size; l++) {
-                        if (binaryObject.at<uchar>(i + neighbor.di[k], j + neighbor.dj[l]) == 255
-                            && !found) {
-                            object_perimeter.contour.at<uchar>(i, j) = 0;
-                            object_perimeter.length++;
+                    if (binaryObject.at<uchar>(i + neighbor.di[k], j + neighbor.dj[k]) == 255 && !found) {
+                        object_perimeter.contour.at<uchar>(i, j) = 0;
+                        object_perimeter.length++;
 
-                            found = true;
-                        }
+                        found = true;
                     }
                 }
             }
@@ -78,7 +75,7 @@ Point computeCenterOfMass(Mat binaryObject) {
 Mat displayCenterOfMass(Point centerOfMass, Mat source) {
     Mat result = source.clone();
 
-    circle(result, centerOfMass, 3, Scalar(255));
+    circle(result, centerOfMass, 3, Scalar(0));
 
     return result;
 }

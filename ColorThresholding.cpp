@@ -7,8 +7,8 @@
 ColorRange firstRed = {Scalar(0, 50, 50), Scalar(10, 255, 255)};
 ColorRange secondRed = {Scalar(170, 50, 50), Scalar(180, 255, 255)};
 
-ColorRange firstBlue = {Scalar(90, 50, 50), Scalar(109, 255, 255)};
-ColorRange secondBlue = {Scalar(110, 50, 50), Scalar(130, 255, 255)};
+ColorRange firstBlue = {Scalar(90, 100, 100), Scalar(109, 255, 255)};
+ColorRange secondBlue = {Scalar(110, 100, 100), Scalar(130, 255, 255)};
 
 Mat findColoredPixels(Mat source, Color color) {
     ColorRange firstColor = color == RED ? firstRed : firstBlue;

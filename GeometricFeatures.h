@@ -31,4 +31,3 @@ float computeAspectRatio(CircumscribedRectangleCoord coord);
 float computeThinnessRatio(int area, int perimeter);
 
 #endif //IP_GEOMETRIC_H
-

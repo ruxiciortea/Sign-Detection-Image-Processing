@@ -23,14 +23,12 @@ Labels labelObjects(Mat source, NeighborhoodStructure neighborhood) {
                     q.pop();
 
                     for (int k = 0; k < neighborhood.size; k++) {
-                        for (int l = 0; l < neighborhood.size; l++) {
-                            int x = head.x + neighborhood.di[k];
-                            int y = head.y + neighborhood.dj[l];
+                        int x = head.x + neighborhood.di[k];
+                        int y = head.y + neighborhood.dj[k];
 
-                            if (source.at<uchar>(x, y) == WHITE_PIXEL && labels.at<uchar>(x,y) == BLACK_PIXEL) {
-                                labels.at<uchar>(x, y) = label;
-                                q.push(Point(x, y));
-                            }
+                        if (source.at<uchar>(x, y) == WHITE_PIXEL && labels.at<uchar>(x,y) == BLACK_PIXEL) {
+                            labels.at<uchar>(x, y) = label;
+                            q.push(Point(x, y));
                         }
                     }
                 }
