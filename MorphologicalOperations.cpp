@@ -4,98 +4,58 @@
 
 #include "MorphologicalOperations.h"
 
-Mat erosion(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
-    int rows = source.rows, cols = source.cols;
-    Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL)), aux = source;
-
-    for (int m = 0; m < noIterations; m++) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                bool background = false;
-
-                for (int k = 0; k < neighborhood.size; k++) {
-                    for (int l = 0; l < neighborhood.size; l++) {
-                        int newI = i + neighborhood.di[k];
-                        int newJ = j + neighborhood.dj[l];
-
-                        if (IsInside(aux, newI, newJ)) {
-                            if (aux.at<uchar>(newI, newJ) == WHITE_PIXEL) {
-                                background = true;
-
-                                break;
-                            } else {
-                                background = false;
-                            }
-                        }
-                    }
-                }
-
-                dst.at<uchar>(i, j) = background ? WHITE_PIXEL : BLACK_PIXEL;
-            }
-        }
-
-        aux = dst;
-    }
-
-    return dst;
-}
-
 Mat dilation(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
     int rows = source.rows, cols = source.cols;
-    Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL)), aux = source;
+    Mat aux(rows, cols,CV_8UC1, Scalar(BLACK_PIXEL));
+    Mat dst;
 
-    for (int m = 0; m < noIterations; m++) {
+    for (int iteration = 0; iteration < noIterations; iteration++) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (aux.at<uchar>(i, j) == WHITE_PIXEL) {
-                    dst.at<uchar>(i, j) = WHITE_PIXEL;
-                } else {
-                    dst.at<uchar>(i, j) = BLACK_PIXEL;
+
+                int currentPixel = iteration != 0 ? aux.at<uchar>(i, j) : source.at<uchar>(i, j);
+
+                if (currentPixel == WHITE_PIXEL) {
+                    aux.at<uchar>(i, j) = WHITE_PIXEL;
 
                     for (int k = 0; k < neighborhood.size; k++) {
-                        for (int l = 0; l < neighborhood.size; l++) {
-                            int newI = i + neighborhood.di[k];
-                            int newJ = j + neighborhood.dj[l];
+                        int newI = i + neighborhood.di[k];
+                        int newJ = j + neighborhood.dj[k];
 
-                            if (IsInside(aux, newI, newJ)) {
-                                dst.at<uchar>(newI, newJ) = BLACK_PIXEL;
-                            }
+                        if (isPixelInside(aux, newI, newJ)) {
+                            aux.at<uchar>(newI, newJ) = WHITE_PIXEL;
                         }
                     }
                 }
             }
         }
-
-        aux = dst;
     }
+
+    dst = aux.clone();
 
     return dst;
 }
 
-Mat opening(Mat source, NeighborhoodStructure neighborhood, int noIterations) {
-    Mat dst = source;
-
-    for (int i = 0; i < noIterations; i++) {
-        dst = dilation(erosion(dst, neighborhood, 1), neighborhood, 1);
-    }
-
-    return dst;
-}
-
-Mat boundaryExtraction(Mat source, NeighborhoodStructure neighborhood) {
+Mat regionFilling(Mat source, NeighborhoodStructure neighborhood) {
     int rows = source.rows, cols = source.cols;
-    Mat erosionMat = erosion(source, neighborhood, 1);
     Mat dst(rows, cols, CV_8UC1, Scalar(BLACK_PIXEL));
+    Mat prv;
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (source.at<uchar>(i, j) == erosionMat.at<uchar>(i, j)) {
-                dst.at<uchar>(i, j) = BLACK_PIXEL;
-            } else {
-                dst.at<uchar>(i, j) = WHITE_PIXEL;
-            }
-        }
-    }
+    Point centerOfMass = computeCenterOfMass(source);
 
-    return dst;
+    dst.at<uchar>(centerOfMass.y, centerOfMass.x) = 255;
+    Mat sourceComplement = complement(source);
+
+    int count = 0;
+
+    do {
+        prv = dst.clone();
+
+        dst = dilation(dst, neighborhood, 1);
+        dst = intersect(dst, sourceComplement);
+
+        count++;
+    } while (!equalMat(dst, prv));
+
+    return unionMat(dst, source);
 }

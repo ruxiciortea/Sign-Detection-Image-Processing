@@ -22,6 +22,10 @@ typedef struct NeighborhoodStructure {
 
 extern NeighborhoodStructure n8;
 
-bool IsInside(Mat img, int i, int j);
+bool isPixelInside(Mat img, int i, int j);
+Mat complement(Mat source);
+Mat unionMat(Mat source1, Mat source2);
+Mat intersect(Mat source1, Mat source2);
+bool equalMat(Mat source1, Mat source2);
 
 #endif //IP_UTILS_H

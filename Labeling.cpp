@@ -76,10 +76,6 @@ int* measureObjects(Labels labels) {
         }
     }
 
-    for (int i = 0; i < labels.noLabels + 1; ++i) {
-        cout << areas[i] << " ";
-    }
-
     return areas;
 }
 
