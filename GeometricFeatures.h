@@ -27,7 +27,6 @@ int computeArea(Mat binaryObject);
 Point computeCenterOfMass(Mat binaryObject);
 Mat displayCenterOfMass(Point centerOfMass, Mat source);
 CircumscribedRectangleCoord computeCircumscribedRectangleCoord(Mat binary_object);
-float computeAspectRatio(CircumscribedRectangleCoord coord);
-float computeThinnessRatio(int area, int perimeter);
+Mat displayCircumscribedRectangle(Mat source, CircumscribedRectangleCoord coord);
 
 #endif //IP_GEOMETRIC_H

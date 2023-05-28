@@ -113,18 +113,31 @@ CircumscribedRectangleCoord computeCircumscribedRectangleCoord(Mat binaryObject)
     return coords;
 }
 
-float computeAspectRatio(CircumscribedRectangleCoord coord) {
-    float R = 0.0;
+Mat displayCircumscribedRectangle(Mat source, CircumscribedRectangleCoord coord) {
+    int rows = source.rows, cols = source.cols;
 
-    R = float(coord.c_max - coord.c_min + 1) / float(coord.r_max - coord.r_min + 1);
+    Mat dst = source.clone();
+    Vec3b color(0, 255, 0);
 
-    return R;
-}
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (i == coord.r_min && j >= coord.c_min && j <= coord.c_max) {
+                dst.at<Vec3b>(i, j) = color;
+            }
 
-float computeThinnessRatio(int area, int perimeter) {
-    float perimeterSquared = perimeter * perimeter;
-    float fraction = area / perimeterSquared;
-    float T = 4 * CV_PI * (fraction);
+            if (i == coord.r_max && j >= coord.c_min && j <= coord.c_max) {
+                dst.at<Vec3b>(i, j) = color;
+            }
 
-    return T;
+            if (j == coord.c_min && i >= coord.r_min && i <= coord.r_max) {
+                dst.at<Vec3b>(i, j) = color;
+            }
+
+            if (j == coord.c_max && i >= coord.r_min && i <= coord.r_max) {
+                dst.at<Vec3b>(i, j) = color;
+            }
+        }
+    }
+
+    return dst;
 }
